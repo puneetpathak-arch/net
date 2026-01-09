@@ -62,10 +62,18 @@ Generate a JSON object containing an array of 2-3 suggestion objects.`;
     return NextResponse.json(JSON.parse(responseText));
   } catch (error: any) {
     console.error('Error in /api/savings-suggestions:', error);
+    let availableModels = [];
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GOOGLE_API_KEY}`);
+      const d = await r.json();
+      availableModels = d.models?.map((m: any) => m.name) || [];
+    } catch (e) { }
+
     return NextResponse.json(
       {
         error: 'Failed to generate savings suggestions.',
-        details: error.message || 'Unknown error'
+        details: error.message || 'Unknown error',
+        availableModels: availableModels.filter((m: string) => m.toLowerCase().includes('gemini'))
       },
       { status: 500 },
     );

@@ -39,10 +39,18 @@ Based on this, provide a helpful and supportive answer. Address the student dire
     return NextResponse.json({ response: responseText });
   } catch (error: any) {
     console.error('Error in /api/financial-advice:', error);
+    let availableModels = [];
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GOOGLE_API_KEY}`);
+      const d = await r.json();
+      availableModels = d.models?.map((m: any) => m.name) || [];
+    } catch (e) { }
+
     return NextResponse.json(
       {
         error: 'Failed to generate financial advice.',
-        details: error.message || 'Unknown error'
+        details: error.message || 'Unknown error',
+        availableModels: availableModels.filter((m: string) => m.toLowerCase().includes('gemini'))
       },
       { status: 500 },
     );
