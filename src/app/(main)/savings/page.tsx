@@ -28,7 +28,7 @@ type Suggestion = {
 
 // Helper to serialize Firestore data
 const serializeFirestoreData = (data: any[]): any[] => {
-    return JSON.parse(JSON.stringify(data));
+  return JSON.parse(JSON.stringify(data));
 };
 
 function SuggestionCard({
@@ -89,22 +89,22 @@ export default function SavingsPage() {
     if (!user) return;
     setDataLoading(true);
     try {
-        const [rawExpenses, rawGoals] = await Promise.all([
-            getExpenses(user.uid),
-            getGoals(user.uid)
-        ]);
-        // Serialize the data to convert Timestamps to strings
-        setExpenses(serializeFirestoreData(rawExpenses));
-        setGoals(serializeFirestoreData(rawGoals));
+      const [rawExpenses, rawGoals] = await Promise.all([
+        getExpenses(user.uid),
+        getGoals(user.uid)
+      ]);
+      // Serialize the data to convert Timestamps to strings
+      setExpenses(serializeFirestoreData(rawExpenses));
+      setGoals(serializeFirestoreData(rawGoals));
     } catch (error) {
-        console.error("Error fetching data for savings page:", error);
-        toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Could not load your data.'
-        });
+      console.error("Error fetching data for savings page:", error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Could not load your data.'
+      });
     } finally {
-        setDataLoading(false);
+      setDataLoading(false);
     }
   }, [user, toast]);
 
@@ -114,12 +114,12 @@ export default function SavingsPage() {
 
   const handleGenerateSuggestions = async () => {
     if (expenses.length === 0) {
-        toast({
-            variant: 'destructive',
-            title: 'Not enough data',
-            description: 'We need some spending data to generate tips. Please add some expenses first.',
-        });
-        return;
+      toast({
+        variant: 'destructive',
+        title: 'Not enough data',
+        description: 'We need some spending data to generate tips. Please add some expenses first.',
+      });
+      return;
     }
 
     setLoading(true);
@@ -138,7 +138,8 @@ export default function SavingsPage() {
       });
 
       if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Request failed with status ${response.status}`);
       }
 
       const result: { suggestions: Suggestion[] } = await response.json();
@@ -176,9 +177,9 @@ export default function SavingsPage() {
     if (!user) return;
 
     const goalPayload = {
-        ...newGoalData,
-        savedAmount: 0,
-        color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
+      ...newGoalData,
+      savedAmount: 0,
+      color: `chart-${(goals.length % 5) + 1}` as Goal['color'],
     };
 
     const newId = await addGoalService(user.uid, goalPayload);
@@ -208,7 +209,7 @@ export default function SavingsPage() {
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
             <p className="ml-4 text-muted-foreground">
-                {loading ? 'Analyzing your habits...' : 'Loading your data...'}
+              {loading ? 'Analyzing your habits...' : 'Loading your data...'}
             </p>
           </div>
         ) : error ? (
@@ -243,7 +244,7 @@ export default function SavingsPage() {
                 <Sparkles className="mr-2 h-5 w-5" />
                 Generate My Tips
               </Button>
-               {expenses.length === 0 && !dataLoading && <p className="text-xs text-muted-foreground mt-2">Please add some expenses first.</p>}
+              {expenses.length === 0 && !dataLoading && <p className="text-xs text-muted-foreground mt-2">Please add some expenses first.</p>}
             </CardContent>
           </Card>
         )}
@@ -253,9 +254,8 @@ export default function SavingsPage() {
         onOpenChange={setIsAddGoalDialogOpen}
         onAddGoal={handleAddGoal}
         initialData={initialGoalData}
-       />
+      />
     </div>
   );
 }
 
-    

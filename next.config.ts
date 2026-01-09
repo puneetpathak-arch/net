@@ -1,5 +1,5 @@
 
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     // This is to allow cross-origin requests in development.
-    allowedDevOrigins: ["https://*.cloudworkstations.dev"],
+    // allowedDevOrigins: ["https://*.cloudworkstations.dev"],
   },
   images: {
     remotePatterns: [

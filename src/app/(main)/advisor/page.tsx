@@ -54,7 +54,7 @@ export default function AdvisorPage() {
                 getBudget(user.uid),
                 getGoals(user.uid),
             ]);
-            
+
             const totalSpent = rawExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
             setFinancialContext({
@@ -105,7 +105,8 @@ export default function AdvisorPage() {
             });
 
             if (!response.ok) {
-                throw new Error(`Request failed with status ${response.status}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `Request failed with status ${response.status}`);
             }
 
             const advice: { response: string } = await response.json();
@@ -133,15 +134,15 @@ export default function AdvisorPage() {
                 <CardContent className="space-y-4">
                     {dataLoading ? (
                         <>
-                           <Skeleton className="h-16 w-full" />
-                           <Skeleton className="h-16 w-full" />
-                           <Skeleton className="h-16 w-full" />
+                            <Skeleton className="h-16 w-full" />
+                            <Skeleton className="h-16 w-full" />
+                            <Skeleton className="h-16 w-full" />
                         </>
                     ) : (
                         <>
-                           <StatCard icon={IndianRupee} label="Monthly Income" value={`₹${financialContext?.monthlyIncome.toLocaleString()}`} color="bg-green-100 text-green-800" />
-                           <StatCard icon={IndianRupee} label="Total Monthly Expenses" value={`₹${financialContext?.monthlyExpenses.toLocaleString()}`} color="bg-red-100 text-red-800" />
-                           <StatCard icon={Target} label="Active Savings Goals" value={JSON.parse(financialContext?.savingsGoalsJSON || '[]').length.toString() ?? '0'} color="bg-blue-100 text-blue-800" />
+                            <StatCard icon={IndianRupee} label="Monthly Income" value={`₹${financialContext?.monthlyIncome.toLocaleString()}`} color="bg-green-100 text-green-800" />
+                            <StatCard icon={IndianRupee} label="Total Monthly Expenses" value={`₹${financialContext?.monthlyExpenses.toLocaleString()}`} color="bg-red-100 text-red-800" />
+                            <StatCard icon={Target} label="Active Savings Goals" value={JSON.parse(financialContext?.savingsGoalsJSON || '[]').length.toString() ?? '0'} color="bg-blue-100 text-blue-800" />
                         </>
                     )}
                 </CardContent>
@@ -159,7 +160,7 @@ export default function AdvisorPage() {
                 <CardContent className="flex-grow flex flex-col gap-4 overflow-hidden">
                     <ScrollArea className="flex-grow pr-4" ref={scrollAreaRef}>
                         <div className="space-y-4">
-                             <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-3">
                                 <Avatar className="h-9 w-9 border-2 border-primary">
                                     <AvatarFallback><Bot /></AvatarFallback>
                                 </Avatar>
