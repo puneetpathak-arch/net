@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-1.5-flash-latest",
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -60,10 +60,13 @@ Generate a JSON object containing an array of 2-3 suggestion objects.`;
     const responseText = result.response.text();
 
     return NextResponse.json(JSON.parse(responseText));
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error in /api/savings-suggestions:', error);
     return NextResponse.json(
-      { error: 'Failed to generate savings suggestions.' },
+      {
+        error: 'Failed to generate savings suggestions.',
+        details: error.message || 'Unknown error'
+      },
       { status: 500 },
     );
   }
