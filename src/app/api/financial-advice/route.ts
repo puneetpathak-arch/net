@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const { question, monthlyIncome, monthlyExpenses, savingsGoalsJSON, recentTransactionsJSON } = body;
 
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `You are a friendly and encouraging financial advisor for college students in India. Your name is 'FinBot'.
 You are chatting with a student who has asked for financial advice. Use the provided financial context to give a personalized, actionable, and easy-to-understand response.
